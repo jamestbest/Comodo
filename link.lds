@@ -1,17 +1,17 @@
 /* Script for -z combreloc */
-/* Copyright (C) 2014-2020 Free Software Foundation, Inc.
+/* Copyright (C) 2014-2022 Free Software Foundation, Inc.
    Copying and distribution of this script, with or without modification,
    are permitted in any medium without royalty provided the copyright
    notice and this notice are preserved.  */
 OUTPUT_FORMAT("elf32-littlearm", "elf32-bigarm",
-              "elf32-littlearm")
+	      "elf32-littlearm")
 OUTPUT_ARCH(arm)
 ENTRY(_start)
 SEARCH_DIR("=/usr/local/lib/arm-linux-gnueabi"); SEARCH_DIR("=/lib/arm-linux-gnueabi"); SEARCH_DIR("=/usr/lib/arm-linux-gnueabi"); SEARCH_DIR("=/usr/local/lib"); SEARCH_DIR("=/lib"); SEARCH_DIR("=/usr/lib"); SEARCH_DIR("=/usr/arm-linux-gnueabi/lib");
 SECTIONS
 {
   /* Read-only sections, merged into text segment: */
-  PROVIDE (__executable_start = SEGMENT_START("text-segment", 0x00000000)); . = SEGMENT_START("text-segment", 0x00000000);
+  PROVIDE (__executable_start = SEGMENT_START("text-segment", 0x0)); . = SEGMENT_START("text-segment", 0x0);
   .text           :
   {
     *(.text.unlikely .text.*_unlikely .text.unlikely.*)
@@ -25,6 +25,7 @@ SECTIONS
     *(.glue_7t) *(.glue_7) *(.vfp11_veneer) *(.v4_bx)
   }
   .interp         : { *(.interp) }
+  .note.gnu.build-id  : { *(.note.gnu.build-id) }
   .hash           : { *(.hash) }
   .gnu.hash       : { *(.gnu.hash) }
   .dynsym         : { *(.dynsym) }
@@ -34,8 +35,8 @@ SECTIONS
   .gnu.version_r  : { *(.gnu.version_r) }
   .rel.dyn        :
     {
-      *(.rel.text .rel.text.* .rel.gnu.linkonce.t.*)
       *(.rel.init)
+      *(.rel.text .rel.text.* .rel.gnu.linkonce.t.*)
       *(.rel.fini)
       *(.rel.rodata .rel.rodata.* .rel.gnu.linkonce.r.*)
       *(.rel.data.rel.ro .rel.data.rel.ro.* .rel.gnu.linkonce.d.rel.ro.*)
@@ -112,12 +113,12 @@ SECTIONS
   .gcc_except_table   : ONLY_IF_RW { *(.gcc_except_table .gcc_except_table.*) }
   .exception_ranges   : ONLY_IF_RW { *(.exception_ranges*) }
   /* Thread Local Storage sections  */
-  .tdata          :
+  .tdata	  :
    {
      PROVIDE_HIDDEN (__tdata_start = .);
      *(.tdata .tdata.* .gnu.linkonce.td.*)
    }
-  .tbss           : { *(.tbss .tbss.* .gnu.linkonce.tb.*) *(.tcommon) }
+  .tbss		  : { *(.tbss .tbss.* .gnu.linkonce.tb.*) *(.tcommon) }
   .preinit_array    :
   {
     PROVIDE_HIDDEN (__preinit_array_start = .);
@@ -214,16 +215,16 @@ SECTIONS
   /* DWARF debug sections.
      Symbols in the DWARF debugging sections are relative to the beginning
      of the section so we begin them at 0.  */
-  /* DWARF 1 */
+  /* DWARF 1.  */
   .debug          0 : { *(.debug) }
   .line           0 : { *(.line) }
-  /* GNU DWARF 1 extensions */
+  /* GNU DWARF 1 extensions.  */
   .debug_srcinfo  0 : { *(.debug_srcinfo) }
   .debug_sfnames  0 : { *(.debug_sfnames) }
-  /* DWARF 1.1 and DWARF 2 */
+  /* DWARF 1.1 and DWARF 2.  */
   .debug_aranges  0 : { *(.debug_aranges) }
   .debug_pubnames 0 : { *(.debug_pubnames) }
-  /* DWARF 2 */
+  /* DWARF 2.  */
   .debug_info     0 : { *(.debug_info .gnu.linkonce.wi.*) }
   .debug_abbrev   0 : { *(.debug_abbrev) }
   .debug_line     0 : { *(.debug_line .debug_line.* .debug_line_end) }
@@ -231,18 +232,24 @@ SECTIONS
   .debug_str      0 : { *(.debug_str) }
   .debug_loc      0 : { *(.debug_loc) }
   .debug_macinfo  0 : { *(.debug_macinfo) }
-  /* SGI/MIPS DWARF 2 extensions */
+  /* SGI/MIPS DWARF 2 extensions.  */
   .debug_weaknames 0 : { *(.debug_weaknames) }
   .debug_funcnames 0 : { *(.debug_funcnames) }
   .debug_typenames 0 : { *(.debug_typenames) }
   .debug_varnames  0 : { *(.debug_varnames) }
-  /* DWARF 3 */
+  /* DWARF 3.  */
   .debug_pubtypes 0 : { *(.debug_pubtypes) }
   .debug_ranges   0 : { *(.debug_ranges) }
-  /* DWARF Extension.  */
-  .debug_macro    0 : { *(.debug_macro) }
+  /* DWARF 5.  */
   .debug_addr     0 : { *(.debug_addr) }
+  .debug_line_str 0 : { *(.debug_line_str) }
+  .debug_loclists 0 : { *(.debug_loclists) }
+  .debug_macro    0 : { *(.debug_macro) }
+  .debug_names    0 : { *(.debug_names) }
+  .debug_rnglists 0 : { *(.debug_rnglists) }
+  .debug_str_offsets 0 : { *(.debug_str_offsets) }
+  .debug_sup      0 : { *(.debug_sup) }
   .gnu.attributes 0 : { KEEP (*(.gnu.attributes)) }
-
+  .note.gnu.arm.ident 0 : { KEEP (*(.note.gnu.arm.ident)) }
   /DISCARD/ : { *(.note.GNU-stack) *(.gnu_debuglink) *(.gnu.lto_*) }
 }

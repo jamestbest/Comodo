@@ -7,7 +7,7 @@ At the start of your program you should include `asm ("ldr r13, =$0x10000");` Th
 
 ## Cross-compiler
 In order to compile the C program you will need a cross-compiler for ARM  
-`sudo apt-get install arm-linux-gnueabi-gcc`  
+`sudo apt-get install gcc-arm-linux-gnueabi`  
 
 ## Compiling
 When compiling use this command  
@@ -20,8 +20,8 @@ When compiling use this command
 `-T linkerscript.lds` This will override the normal linker script. More info below
 
 ## Linker script
-Oh boy, well lets just say I "learnt" about linkerscripts and their structure by moving and removing parts, and so the included script SHOULD work, as its just the normal script with minor changes to the positioning of the sections in the ELF, mainly moving .text to start at 0x0, where KMD will start running.
+The linker script is just the basic script but with the .text section moved to 0x0. There is currently a bug that appears only on one machine I've tried where PHDR segment not covered by LOAD segment is displayed when compiling. I think this has to do with me removing all of the header data by moving the text section. Or at least I think I'm removing the header data, I'm not really sure. 
 
 ## Loading into Komodo
-Once the file has been compiled to an ELF you can just LOAD it in KMD, do not attempt to COMPILE it as it is already compiled.
+Once the file has been compiled to an ELF you can just LOAD it in KMD.
 If all has gone well the start of the program should be at addr. 0x0 and so you can just reset Komodo and run. You can find the end of the main function by looking for BX R14 in the assembly view.  

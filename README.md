@@ -17,7 +17,7 @@ When compiling use this command
 
 `-mcpu=arm7tdmi` This is one of the supported architectures listed [here](https://studentnet.cs.manchester.ac.uk/resources/software/komodo/) under target systems
 
-`-T linkerscript.lds` This will override the normal linker script. More info below
+`-T link.lds` This will override the normal linker script. More info below
 
 ## Linker script
 The linker script is just the basic script but with the .text section moved to 0x0. There is currently a bug that appears only on one machine I've tried where PHDR segment not covered by LOAD segment is displayed when compiling. I think this has to do with me removing all of the header data by moving the text section. Or at least I think I'm removing the header data, I'm not really sure. 

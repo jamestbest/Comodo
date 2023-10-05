@@ -34,4 +34,5 @@ This is a bit of a hodgepodge at the moment and so I'll attempt to refine it ove
 When using optimisation flags, e.g. -O3, the compiler will probably remove the added SP change and so you may have to change it manually in KMD. Also the included versions are simple enough that at O3 it will all be reduced to a constant loaded into R0.
 
 ## TODO
-I have not yet tried to have multiple C files that are then linked. I think this will work just fine, but it is not yet tested.
+I have not yet tried to have multiple C files that are then linked. I think this will work just fine, but it is not yet tested.  
+SWI 3 and such are just like any other instruction and have a hex value for the opcode/operand. So can I use inline assembly with a defined constant for the SWIs and then for example move into R0 a pointer to some memory and then call swi 3. Does the compiler take into account inline assembly when tracking registers? May need to push/pop R0 before editing.

@@ -11,7 +11,7 @@ In order to compile the C program you will need a cross-compiler for ARM
 
 ## Compiling
 When compiling use this command  
-`arm-linux-gnueabi-gcc <Cfilename> -nostartfiles -nostdlib -nolibc -nodefaultlibs -o <outputFileName> -mcpu=arm7tdmi -T linkerscript.lds`  
+`arm-linux-gnueabi-gcc <Cfilename> -nostartfiles -nostdlib -nolibc -nodefaultlibs -o <outputFileName> -mcpu=arm7tdmi -T link.lds`  
 
 `-nostartfiles -nostdlib -nolibc -nodefaultlibs` This will disable all of the C libraries that are usually included, I don't think they're all needed I think some probably cover the rest but I'm not testing it.
 

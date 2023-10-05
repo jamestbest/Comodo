@@ -3,7 +3,7 @@ This is a repo with information/files for compiling C programs to an ELF format 
 
 ## C file
 There are some fairly major caveats to this compilation, the most important being that you CANNOT use anything from the standard library as it will not be loaded.  
-At the start of your program you should include `asm ("ldr r13, =$0x10000");` This will set the stack pointer to 10000 as I think that memory above a certain point is protected and will spit out 12345678 if you try to read to it.  
+At the start of your program you should include `asm ("ldr r13, =$0x10000");` This will set the stack pointer to 10000 as there is only 1MB of memory and accessing addresses outside the bound will spit out 12345678 if you try to read to it.
 
 ## Cross-compiler
 In order to compile the C program you will need a cross-compiler for ARM  

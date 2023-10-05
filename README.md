@@ -28,3 +28,10 @@ If all has gone well the start of the program should be at addr. 0x0 and so you 
 
 ## Extra files
 Also included are three test C programs along with their compiled versions, with the not so great naming scheme of \<cfile\>.c, \<cfile\>C. 
+
+## Notes
+This is a bit of a hodgepodge at the moment and so I'll attempt to refine it over time.  
+When using optimisation flags, e.g. -O3, the compiler will probably remove the added SP change and so you may have to change it manually in KMD. Also the included versions are simple enough that at O3 it will all be reduced to a constant loaded into R0.
+
+## TODO
+I have not yet tried to have multiple C files that are then linked. I think this will work just fine, but it is not yet tested.

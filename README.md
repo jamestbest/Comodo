@@ -25,3 +25,6 @@ The linker script is just the basic script but with the .text section moved to 0
 ## Loading into Komodo
 Once the file has been compiled to an ELF you can just LOAD it in KMD.
 If all has gone well the start of the program should be at addr. 0x0 and so you can just reset Komodo and run. You can find the end of the main function by looking for BX R14 in the assembly view.  
+
+## Extra files
+Also included are three test C programs

@@ -30,13 +30,18 @@ int main() {
 
     char chr = getchar();
 
-    putchar(chr);
+    putcharln(chr);
+
+    print("Please enter your name: ");
 
     int size = 10;
     char buff[size];
-    getstring('!', size, buff);
+    getstring('\n', size, buff);
 
-    print(buff);
+    print("Your name is: ");
+    println(buff);
+
+    println(streq(buff, "james") ? "You are admin" : "You are not admin");
 
     reset(0);
 }

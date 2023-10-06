@@ -102,3 +102,19 @@ void getstring(char terminator, int maxSize, char* buff) {
     }
     buff[min(index, maxSize - 1)] = '\0';
 }
+
+int streq(char *stra, char *strb) {
+    int lena = len(stra);
+    int lenb = len(strb);
+
+    if (lena != lenb) {
+        return 0;
+    }
+
+    for (int i = 0; i < lena; i++) {
+        if (stra[i] != strb[i]) {
+            return 0;
+        }
+    }
+    return 1;
+}

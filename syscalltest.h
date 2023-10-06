@@ -10,6 +10,6 @@ void println (char *str);
 void reset(int err);
 
 void getstring(char terminator, int maxSize, char* buff);
-
+int streq(char *stra, char *strb);
 int min(int a, int b);
 int max(int a, int b);

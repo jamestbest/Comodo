@@ -28,6 +28,16 @@ int main() {
 
     println(c);
 
+    char chr = getchar();
+
+    putchar(chr);
+
+    int size = 10;
+    char buff[size];
+    getstring('!', size, buff);
+
+    print(buff);
+
     reset(0);
 }
 

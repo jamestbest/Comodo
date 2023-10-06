@@ -37,8 +37,8 @@ void println(char *str) {
 }
 
 void reset(int err){
-    asm ("swi 2":::);
     asm ("mov r14, #0":::);
+    asm ("swi 2":::);
 }
 
 void putchar (char a) {
@@ -69,4 +69,36 @@ void putint (int a) {
 void putintln (int a) {
     putint(a);
     putchar('\n');
+}
+
+char getchar() {
+    char out = 'f';
+    asm (
+        "swi 1;"
+        "mov %0, %%r0;"
+        : "=r" (out)
+        :
+        : "r0"
+    );
+    return out;
+}
+
+int min(int a, int b) {
+    return a < b ? a : b;
+}
+
+int max(int a, int b) {
+    return a > b ? a : b;
+}
+
+#define MIN_SIZE 20
+void getstring(char terminator, int maxSize, char* buff) {
+    char inp = getchar();
+
+    int index = 0;
+    while (inp != terminator && index < maxSize) {
+        buff[index++] = inp;
+        inp = getchar();
+    }
+    buff[min(index, maxSize - 1)] = '\0';
 }

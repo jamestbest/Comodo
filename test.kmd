@@ -1,0 +1,16 @@
+KMD
+00000000:             ;         ALIGN
+00000000: EAFFFFFF    ;         B main
+00000004: E3A01002    ; main    MOV R1, #2
+00000008: E3A02000    ;         MOV R2, #0
+0000000C: E0000291    ; next    MUL r0, r1, r2
+00000010: EF000004    ;         SWI 4
+00000014: E2822001    ;         ADD r2, r2, #1
+00000018: E352000C    ;         CMP r2, #12
+0000001C: DAFFFFFA    ;         BLE next
+00000020: EF000002    ;         SWI 2
+00000024:             ; 
+
+Symbol Table: Labels
+: main                              00000004  Local -- ARM
+: next                              0000000C  Local -- ARM

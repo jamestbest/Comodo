@@ -6,17 +6,22 @@
 OUTPUT_FORMAT("elf32-littlearm", "elf32-bigarm",
 	      "elf32-littlearm")
 OUTPUT_ARCH(arm)
-ENTRY(_start)
+ENTRY(main)
 SEARCH_DIR("=/usr/local/lib/arm-linux-gnueabi"); SEARCH_DIR("=/lib/arm-linux-gnueabi"); SEARCH_DIR("=/usr/lib/arm-linux-gnueabi"); SEARCH_DIR("=/usr/local/lib"); SEARCH_DIR("=/lib"); SEARCH_DIR("=/usr/lib"); SEARCH_DIR("=/usr/arm-linux-gnueabi/lib");
 SECTIONS
 {
   /* Read-only sections, merged into text segment: */
   PROVIDE (__executable_start = SEGMENT_START("text-segment", 0x0)); . = SEGMENT_START("text-segment", 0x0);
-  .text           :
+  .main			:
   {
+    *(.main.*)
+  }
+
+  .text			:
+  {
+    *(.text.startup .text.startup.*)
     *(.text.unlikely .text.*_unlikely .text.unlikely.*)
     *(.text.exit .text.exit.*)
-    *(.text.startup .text.startup.*)
     *(.text.hot .text.hot.*)
     *(SORT(.text.sorted.*))
     *(.text .stub .text.* .gnu.linkonce.t.*)

@@ -3,7 +3,6 @@ asm ("ldr r13, =$0x10000");
 #include "syscalltest.h"
 
 int main() {
-    int a = 12;
     int out = 1; int inp = 2;
     putchar('c');
     putchar('\n');
@@ -15,12 +14,21 @@ int main() {
     for (int i = 0; i < 10; i++) {
         char *out = "The value of i is \0";
         print(out);
-        char val = (char)(i+48);
-        putchar(val);
-        putchar('\n');
+        putintln(i);
     }
 
-    exit(0);
+    char* a = "Hello";
+    char* b = " World!";
+    int newlen = len(a) + len(b) + 1;
+    char c[newlen];
+
+    putintln(newlen);
+
+    strcat(a,b,c);
+
+    println(c);
+
+    reset(0);
 }
 
 int a() {

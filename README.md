@@ -19,12 +19,24 @@ When compiling use this command
 
 `-T link.lds` This will override the normal linker script. More info below
 
+When compiling with the [nsstdlib]("nsstdlib.md") use this command
+`arm-linux-gnueabi-gcc <Cfilename> <nsstdlib> -nostartfiles -nostdlib -nolibc -nodefaultlibs -o <outputFileName> -mcpu=arm7tdmi -T link.lds -Wno-builtin-declaration-mismatch`
+
+`<nsstdlib>` This is the file that contains the nsstdlib code, IN THIS COMMIT IT IS CALLED syscalltest.c
+
+`-Wno-builtin-declaration-mismatch` disables the warning about redefining the std lib functions
+
 ## Linker script
 The linker script is just the basic script but with the .text section moved to 0x0. There is currently a bug that appears only on one machine I've tried where PHDR segment not covered by LOAD segment is displayed when compiling. I think this has to do with me removing all of the header data by moving the text section. Or at least I think I'm removing the header data, I'm not really sure. 
 
 ## Loading into Komodo
 Once the file has been compiled to an ELF you can just LOAD it in KMD.
 If all has gone well the start of the program should be at addr. 0x0 and so you can just reset Komodo and run. You can find the end of the main function by looking for BX R14 in the assembly view.  
+
+##NSSTDlib
+Included in the repo is the "not so standard library" as of this commit it is very bare bones, with putchar, print, and exit. 
+Information on interacting with these functions can be found in the [nsstdlib.md](nsstdlib.md).  
+To use the nsstdlib simply add `#include <nsstdlib>`
 
 ## Extra files
 Also included are three test C programs along with their compiled versions, with the not so great naming scheme of \<cfile\>.c, \<cfile\>C. 

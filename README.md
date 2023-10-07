@@ -37,7 +37,7 @@ If all has gone well the start of the program should be at addr. 0x0 and so you 
 ## NSSTDlib
 Included in the repo is the "not so standard library" as of this commit it is very bare bones, with putchar, print, and exit. 
 Information on interacting with these functions can be found in the [nsstdlib.md](nsstdlib.md).  
-To use the nsstdlib simply add `#include <nsstdlib>`
+To use the nsstdlib simply add `#include "nsstdlib"`
 
 ## Using GCC optimisations
 From testing different -O levels GCC destroys the inline assembly functions defined in the nsstdlib and so the file has a #pragma optimize("O0") to exclude it from any optimisations.  

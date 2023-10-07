@@ -27,24 +27,26 @@ When compiling with the [nsstdlib]("nsstdlib.md") use this command
 `-Wno-builtin-declaration-mismatch` disables the warning about redefining the std lib functions
 
 ## Linker script
-The linker script is just the basic script but with the .text section moved to 0x0. There is currently a bug that appears only on one machine I've tried where PHDR segment not covered by LOAD segment is displayed when compiling. I think this has to do with me removing all of the header data by moving the text section. Or at least I think I'm removing the header data, I'm not really sure. 
+The linker script is just the basic script but with the .text section moved to 0x0. There is currently a bug that appears only on one machine I've tried where PHDR segment not covered by LOAD segment is displayed when compiling. I think this has to do with me removing all of the header data by moving the text section. Or at least I think I'm removing the header data, I'm not really sure.  
+The linker script also now changes the entry function to `main`, if there is no main defined within your file it will default to 0x0, and the linker may move your functions around, so it is advisable to have a main. There are no arguments passed to the program and so you don't need argc, and argv.
 
 ## Loading into Komodo
 Once the file has been compiled to an ELF you can just LOAD it in KMD.
 If all has gone well the start of the program should be at addr. 0x0 and so you can just reset Komodo and run. You can find the end of the main function by looking for BX R14 in the assembly view.  
 
-##NSSTDlib
+## NSSTDlib
 Included in the repo is the "not so standard library" as of this commit it is very bare bones, with putchar, print, and exit. 
 Information on interacting with these functions can be found in the [nsstdlib.md](nsstdlib.md).  
 To use the nsstdlib simply add `#include <nsstdlib>`
 
+## Using GCC optimisations
+From testing different -O levels GCC destroys the inline assembly functions defined in the nsstdlib and so the file has a #pragma optimize("O0") to exclude it from any optimisations.  
+When using the `asm("ldr r13, =$0x10000")` at the start of the file with optimisations the functions may get moved around moving the asm instruction, and so place `__attribute__((optimize("O0")))` infront of your main function declaration to exclude it from all optimisation.
+
 ## Extra files
 Also included are three test C programs along with their compiled versions, with the not so great naming scheme of \<cfile\>.c, \<cfile\>C. 
 
-## Notes
-This is a bit of a hodgepodge at the moment and so I'll attempt to refine it over time.  
-When using optimisation flags, e.g. -O3, the compiler will probably remove the added SP change and so you may have to change it manually in KMD. Also the included versions are simple enough that at O3 it will all be reduced to a constant loaded into R0.
-
 ## TODO
 I have not yet tried to have multiple C files that are then linked. I think this will work just fine, but it is not yet tested.  
-SWI 3 and such are just like any other instruction and have a hex value for the opcode/operand. So can I use inline assembly with a defined constant for the SWIs and then for example move into R0 a pointer to some memory and then call swi 3. Does the compiler take into account inline assembly when tracking registers? May need to push/pop R0 before editing.
+SWI 3 and such are just like any other instruction and have a hex value for the opcode/operand. So can I use inline assembly with a defined constant for the SWIs and then for example move into R0 a pointer to some memory and then call swi 3. Does the compiler take into account inline assembly when tracking registers? May need to push/pop R0 before editing.  
+Is there a better way for when using optimisation than excluding the main function as it holds the asm instruction to set the stack pointer? 

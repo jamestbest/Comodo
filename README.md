@@ -19,7 +19,7 @@ When compiling use this command
 
 `-T link.lds` This will override the normal linker script. More info below
 
-When compiling with the [nsstdlib]("nsstdlib.md") use this command
+When compiling with the [nsstdlib](nsstdlib.md) use this command
 `arm-linux-gnueabi-gcc <Cfilename> <nsstdlib> -nostartfiles -nostdlib -nolibc -nodefaultlibs -o <outputFileName> -mcpu=arm7tdmi -T link.lds -Wno-builtin-declaration-mismatch`
 
 `<nsstdlib>` This is the file that contains the nsstdlib code, IN THIS COMMIT IT IS CALLED syscalltest.c

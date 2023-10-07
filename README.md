@@ -22,7 +22,7 @@ When compiling use this command
 When compiling with the [nsstdlib](nsstdlib.md) use this command
 `arm-linux-gnueabi-gcc <Cfilename> <nsstdlib> -nostartfiles -nostdlib -nolibc -nodefaultlibs -o <outputFileName> -mcpu=arm7tdmi -T link.lds -Wno-builtin-declaration-mismatch`
 
-`<nsstdlib>` This is the file that contains the nsstdlib code, IN THIS COMMIT IT IS CALLED syscalltest.c
+`<nsstdlib>` This is the file that contains the nsstdlib code, [[IN THIS COMMIT IT IS CALLED syscalltest.c]]
 
 `-Wno-builtin-declaration-mismatch` disables the warning about redefining the std lib functions
 
@@ -35,9 +35,9 @@ Once the file has been compiled to an ELF you can just LOAD it in KMD.
 If all has gone well the start of the program should be at addr. 0x0 and so you can just reset Komodo and run. You can find the end of the main function by looking for BX R14 in the assembly view.  
 
 ## NSSTDlib
-Included in the repo is the "not so standard library" as of this commit it is very bare bones, with putchar, print, and exit. 
+Included in the repo is the "not so standard library". 
 Information on interacting with these functions can be found in the [nsstdlib.md](nsstdlib.md).  
-To use the nsstdlib simply add `#include "nsstdlib"`
+To use the nsstdlib include the headerfile at the top of the file. [[Currently called syscalltest.h]] and include the file in the compilation process, described [here](#Compiling)
 
 ## Using GCC optimisations
 From testing different -O levels GCC destroys the inline assembly functions defined in the nsstdlib and so the file has a #pragma optimize("O0") to exclude it from any optimisations.  

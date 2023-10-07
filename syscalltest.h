@@ -13,3 +13,6 @@ void getstring(char terminator, int maxSize, char* buff);
 int streq(char *stra, char *strb);
 int min(int a, int b);
 int max(int a, int b);
+int pow(int base, int expo);
+int str2int(char *str);
+int ror(int a, int rep);

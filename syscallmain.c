@@ -1,4 +1,4 @@
-asm ("ldr r13, =$0x10000");
+__asm__ ("ldr r13, =$0x10000");
 
 #include "syscalltest.h"
 

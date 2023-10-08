@@ -1,6 +1,8 @@
 # Comodo
 This is a repo with information/files for compiling C programs to an ELF format that the Komodo emulator can load and run
 
+# Comodo's gone dynamic! 🥳
+
 ## C file
 There are some fairly major caveats to this compilation, the most important being that you CANNOT use anything from the standard library as it will not be loaded.  
 At the start of your program you should include `asm ("ldr r13, =$0x10000");` This will set the stack pointer to 10000 as there is only 1MB of memory and accessing addresses outside the bound will spit out 12345678 if you try to read to it.
@@ -22,7 +24,7 @@ When compiling use this command
 When compiling with the [nsstdlib](nsstdlib.md) use this command
 `arm-linux-gnueabi-gcc <Cfilename> <nsstdlib> -nostartfiles -nostdlib -nolibc -nodefaultlibs -o <outputFileName> -mcpu=arm7tdmi -T link.lds -Wno-builtin-declaration-mismatch`
 
-`<nsstdlib>` This is the file that contains the nsstdlib code, [[IN THIS COMMIT IT IS CALLED syscalltest.c]]
+`<nsstdlib>` This is the file that contains the nsstdlib code.
 
 `-Wno-builtin-declaration-mismatch` disables the warning about redefining the std lib functions
 
@@ -37,16 +39,15 @@ If all has gone well the start of the program should be at addr. 0x0 and so you 
 ## NSSTDlib
 Included in the repo is the "not so standard library". 
 Information on interacting with these functions can be found in the [nsstdlib.md](nsstdlib.md).  
-To use the nsstdlib include the headerfile at the top of the file. [[Currently called syscalltest.h]] and include the file in the compilation process, described [here](#Compiling)
+To use the nsstdlib include the headerfile at the top of the C file and include the file in the compilation process, described [here](#Compiling)
 
 ## Using GCC optimisations
 From testing different -O levels GCC destroys the inline assembly functions defined in the nsstdlib and so the file has a #pragma optimize("O0") to exclude it from any optimisations.  
 When using the `asm("ldr r13, =$0x10000")` at the start of the file with optimisations the functions may get moved around moving the asm instruction, and so place `__attribute__((optimize("O0")))` infront of your main function declaration to exclude it from all optimisation.
 
 ## Extra files
-Also included are three test C programs along with their compiled versions, with the not so great naming scheme of \<cfile\>.c, \<cfile\>C. 
+Also included are some simple examples with their compiled versions, as well as some examples that use the nsstdlib.
 
 ## TODO
-I have not yet tried to have multiple C files that are then linked. I think this will work just fine, but it is not yet tested.  
-SWI 3 and such are just like any other instruction and have a hex value for the opcode/operand. So can I use inline assembly with a defined constant for the SWIs and then for example move into R0 a pointer to some memory and then call swi 3. Does the compiler take into account inline assembly when tracking registers? May need to push/pop R0 before editing.  
+I have not yet tried to have multiple C files that are then linked. I think this will work just fine, but it is not yet tested.    
 Is there a better way for when using optimisation than excluding the main function as it holds the asm instruction to set the stack pointer? 

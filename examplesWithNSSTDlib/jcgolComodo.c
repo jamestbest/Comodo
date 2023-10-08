@@ -1,6 +1,6 @@
 asm ("ldr r13, =$0x10000");
 
-#include "syscalltest.h"
+#include "nsstdlib.h"
 
 int width = 18;
 int height = 18;
@@ -20,6 +20,8 @@ int countNeighbours(int row, int col, char active[height][width]);
 int isvalidindex(int row, int col);
 
 __attribute__((optimize("O0"))) int main(){
+    heapCreate();
+
     char activeGrid[MAXHEIGHT][MAXWIDTH];
     char passiveGrid[MAXHEIGHT][MAXWIDTH];
 

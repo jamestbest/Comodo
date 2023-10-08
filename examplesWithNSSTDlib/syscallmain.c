@@ -1,6 +1,6 @@
 __asm__ ("ldr r13, =$0x10000");
 
-#include "syscalltest.h"
+#include "nsstdlib.h"
 
 int main() {
     int out = 1; int inp = 2;

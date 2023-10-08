@@ -30,11 +30,13 @@ All of the following functions have a \<funcName\>ln() variant that will print a
 ## Misc
   - void reset(int err)                                                 Resets the stack pointer and sets the program counter to 0x0 so that you can just press run again without reset. Error code currently not used.
 
-## Dynamic memory allocation [[NOT YET IMPLIMENTED]]
-In order to support dynamic memory allocation the nsstdlib assumes that memory addresses 0x010000 - 0x100000 are a heap. These should not be otherwise interacted with. This gives a program about 960KiB of dynamic memory.  
+## Dynamic memory allocation
+In order to support dynamic memory allocation the nsstdlib assumes that memory addresses 0x010000 - 0x100000 are a heap. These should not be otherwise interacted with. This gives a program about 960KiB of dynamic memory.
 
-The memory allocation is first setup with the heapCreate() function, this will return a pointer to the heap record that will track what is being stored.  
+Calls to malloc will have their requested bytes set to the closest multiple of 8. Each piece of memory added to the heap uses a Crate struct to hold information on the section, i.e. if its being used, its size, and a pointer to the next crate. This means there is 3 bytes of header before each malloc point and so the effective amount of dynamic memory will depend on how small your calls to malloc are.
 
-To allocate memory use malloc();  
+In order to use the heap you must first call heapCreate() this will setup the heap header Crate.  
 
-To free memory use free();  
+  - void* malloc(unsigned int bytes)                                    Allocate the number of bytes specified on the heap and return pointer to the memory, if it fails the result will be 0
+  - void* malloc_debuf(unsigned int bytes)                              malloc but with debug information printed to the features tab
+  - void free(void* ptr)                                                Frees the memory from the heap making it availible to be reused. 

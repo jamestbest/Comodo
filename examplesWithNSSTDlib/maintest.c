@@ -13,15 +13,16 @@ __attribute__((optimize("O0"))) int main() {
     println("First step is to print something to the screen, and it seems we've at least got that working, so next will be just a single character");
     putcharln('h');
 
-    println("Next is user inputs, we're going to first collect a single character from the user, then a string of maxsize 3 (2 characters and a \\0), and then a string that can be any size until we reach '\\n");
-
+    println("Next is user inputs, we're going to first collect a single character from the user, then a string of maxsize 4 (type 4 characters or ENTER key to end), and then a string that can be any size until we reach '\\n");
     char inp = getchar();
 
     putcharln(inp);
 
-    char* inp2 = getstring('\0', 3);
+    char* inp2 = getstring('\n', 4);
 
     println(inp2);
+
+    println("For this large string input, try to type a lot of characters as it will help with the examples later on");
 
     char* inp3 = getstring('\n', -1);
 
@@ -91,6 +92,9 @@ __attribute__((optimize("O0"))) int main() {
     println("We should see a lot of different things allocated, this is because every call to getstring() will have its result allocated onto the heap to prevent you from having to create a buffer");
     println("Lets free all of those strings");
 
+    println("Press any key to continue");
+    char temp = getchar();
+
     free(inp2);
     free(inp3);
 
@@ -105,5 +109,28 @@ __attribute__((optimize("O0"))) int main() {
     println("Now lets see what the heap looks like");
     heapPrint();
 
-    println("As you can see some of the Crates have combined into a larger one that is marked as availible. There are still some allocations we haven't freed");
+    println("As you can see some of the Crates have combined into a larger one that is marked as availible. There are still some allocations we haven't freed (two we can't, damned memory leaks)");
+    println("We'll now free the grid and see the final state");
+    free(grid);
+
+    println("Press any key to continue");
+    temp = getchar();
+
+    heapPrint();
+
+    println("Press any key to continue");
+    temp = getchar();
+
+    println("We should have a free block at the beginning (at least 8 bytes) that we can try and use ");
+    char* freeme = malloc(8);
+    println("I've requested 8 bytes of memory from malloc and now we can see where it took it from");
+    heapPrint();
+
+    println("Malloc will always try to find the first properly sized block of memory, and as this heap is a linked list it will be at the lowest memory address");
+
+    free(freeme);
+
+    println("That concludes this strange 'tutorial' that was actually incredibly useful at helpling me find and fix bugs.");
+    println("Feel free to edit some of the errors/mistakes in this code");
+    reset(0);
 }

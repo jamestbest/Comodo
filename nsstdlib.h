@@ -1,3 +1,5 @@
+#pragma once
+
 char getchar();
 
 void putchar (char a);
@@ -6,8 +8,11 @@ void putint (int a);
 void putintln (int a);
 void print (char *str);
 void println (char *str);
+void puthex(unsigned int a);
+void puthexln(unsigned int a);
 
-void reset(int err);
+void resets(); //reset silently
+void reset(int err); //outputs exit code
 
 char* getstring(char terminator, int maxSize);
 int streq(char *stra, char *strb);
@@ -33,7 +38,6 @@ void* malloc(unsigned int bytes);
 void* malloc_debug(unsigned int bytes);
 int free(void* ptr);
 void heapPrint();
-
 
 #define heapstart   0x010000
 #define heapend     0x100000

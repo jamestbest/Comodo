@@ -1,6 +1,6 @@
 asm ("ldr r13, =$0x10000");
 
-#include "nsstdlib.h"
+#include "../nsstdlib.h"
 
 
 __attribute__((optimize("O0"))) int main(){
@@ -50,6 +50,14 @@ __attribute__((optimize("O0"))) int main(){
     println("------------------");
     putintln((int)myotherints);
     free(myotherints);
+
+    heapPrint();
+
+    free(buff);
+    free(str);
+    free(grid);
+
+    heapPrint();
 
     reset(0);
 

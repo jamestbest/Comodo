@@ -1,7 +1,7 @@
 # Comodo
 This is a repo with information/files for compiling C programs to an ELF format that the Komodo emulator can load and run
 
-# Comodo's gone dynamic! 🥳
+# [Comodo's gone dynamic! 🥳](./NSSTDLib.md#Dynamic-memory-allocation)
 
 ## C file
 There are some fairly major caveats to this compilation, the most important being that you CANNOT use anything from the standard library as it will not be loaded.  

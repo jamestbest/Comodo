@@ -41,9 +41,16 @@ int len(char *str){
     return i - 1;
 }
 
-void strcat(char *stra, char *strb, char *strc) {
+char* strcat(char *stra, char *strb) {
     int lena = len(stra);
     int lenb = len(strb);
+
+    char* strc = malloc(lena + lenb + 1);
+
+    if (strc == 0) {
+        println("Failed to malloc in strcat");
+        return 0;
+    }
     
     for (int i = 0; i < lena; i++) {
         strc[i] = stra[i];
@@ -53,6 +60,7 @@ void strcat(char *stra, char *strb, char *strc) {
     }
 
     strc[lena + lenb] = '\0';
+    return strc;
 }
 
 void print(char *str) {
@@ -72,6 +80,9 @@ void println(char *str) {
 }
 
 void reset(int err){
+    print("Program exited with err code: ");
+    putintln(err);
+
     asm ("swi 2":::);
     asm ("mov r15, #0":::);
 }
@@ -126,15 +137,63 @@ int max(int a, int b) {
     return a > b ? a : b;
 }
 
-void getstring(char terminator, int maxSize, char* buff) {
+#define rmlessthan8 0xFFF8
+void memcpy(void* src, void* dest, unsigned int bytes) {
+    unsigned int mfour = bytes & rmlessthan8;
+    unsigned int extra = bytes & 0x7;
+
+    for (int i = 0; i < mfour / 4; i++) {
+        int srcword = *(((int*)src) + i);
+        *((int*)dest+i) = srcword;
+    }
+
+    for (int i = 0; i < extra; i++) {
+        char srcchar = *(((char*)src) + i);
+        *((char*)dest + i) = srcchar;
+    }
+}
+
+#define MINBUFFSIZE 8
+static char* getstringdyn(char terminator) {
+    //attempt to grow the buffer
+    int buffSize = MINBUFFSIZE;
+    char* buff = malloc(buffSize);
+
+    int index = 0; char inp = getchar();
+
+    while (inp != terminator) {
+        if (index >= buffSize) {
+            int newbuffsize = buffSize << 1;
+            char* bufftemp = malloc(newbuffsize);
+            if (bufftemp == 0) {buff[buffSize - 1] = '\0'; return buff;}
+            memcpy(buff, bufftemp, buffSize);
+            free(buff);
+            buff = bufftemp;
+            buffSize = newbuffsize;
+        }
+        buff[index++] = inp;
+        inp = getchar();
+    }
+    buff[(min(index, buffSize - 1))] = '\0';
+    return buff;
+}
+#undef MINBUFFSIZE
+
+char* getstring(char terminator, int maxSize) {
+    if (maxSize == -1) return getstringdyn(terminator);
+
+    char* buff = malloc(maxSize); 
+
+    int index = 0; 
     char inp = getchar();
 
-    int index = 0;
     while (inp != terminator && index < maxSize) {
         buff[index++] = inp;
         inp = getchar();
     }
     buff[min(index, maxSize - 1)] = '\0';
+
+    return buff;
 }
 
 int streq(char *stra, char *strb) {
@@ -153,28 +212,46 @@ int streq(char *stra, char *strb) {
     return 1;
 }
 
-#define heapstart   0x010000
-#define heapend     0x100000
+// HEAP FUNCTIONS
 
-typedef struct Crate {
-    char used;
-    struct Crate* next;
-    int size;
-} Crate;
+static void cratePrint(Crate* cptr) {
+    println("----------CRATE---------");
+    print("Found new block at mem addr: "); putintln((int)cptr);
+    println(cptr->used ? "Block is in use" : "Block is availible");
+    print("Size: "); putintln((int) (cptr->size));
+    print("PTR to next: "); putintln((int) (cptr->next));
+    print("PTR to prev: "); putintln((int) (cptr->prev));
+}
+
+static void mergeCrates(Crate* c1, Crate* c2) {
+    c1->next = c2->next;
+    c2->next->prev = c1; //c1 <-> c2 <-> c3   ==>    c1 <-> c3
+    c1->size += sizeof(Crate) + c2->size;   
+}
+
+static void mergeCrates_debug(Crate* c1, Crate* c2) {
+    //c1 < c2
+    println("~~~~~~~~~~Merging crates info below~~~~~~~~~");
+    cratePrint(c1);
+    cratePrint(c2);
+    println("Now merging");
+    mergeCrates(c1, c2);
+    cratePrint(c1);
+    cratePrint(c2);
+    println("~~~~~~~~~~Crate merge end~~~~~~~~~~");
+}
 
 void heapCreate() {
     /* 
-     * usedflag ptr2next  sizeofdata  data
-     * byte     4 bytes   4 bytes     ...
+     * usedflag ptr2next  ptr2prev  sizeofdata  data
+     * byte     4 bytes   4 bytes   4 bytes     ...
      */
 
     void* head = (void *) heapstart;
 
-    *(Crate *)head = (Crate){0,0, heapend - heapstart - sizeof(Crate)};
+    *(Crate *)head = (Crate){0,0,0, heapend - heapstart - sizeof(Crate)};
 }
 
-
-#define rmlessthan8 0b1111111111111000
 void* malloc_debug(unsigned int bytes) {
     /* Find next available Crate of memory
      * Split off the amount needed
@@ -184,7 +261,7 @@ void* malloc_debug(unsigned int bytes) {
 
     Crate* cptr = (Crate *) heapstart;
 
-    bytes = (bytes & rmlessthan8) < bytes ? bytes + 8 & rmlessthan8 : bytes & rmlessthan8;
+    bytes = (bytes & rmlessthan8) < bytes ? (bytes + 8) & rmlessthan8 : bytes & rmlessthan8;
 
     print("This is the bytes requested and aligned");
     putintln(bytes);
@@ -218,10 +295,14 @@ void* malloc_debug(unsigned int bytes) {
     print("This is the value of the newcptr: ");
     putintln((int)newcptr);
     asm volatile("crateVals:");
-    *newcptr = (Crate){0, 0, cptr->size - sizeof(Crate) - bytes};
+    *newcptr = (Crate){0, 0, cptr, cptr->size - sizeof(Crate) - bytes};
     cptr->used = 1;
     cptr->size = bytes;
     cptr->next = newcptr;
+
+    println("This is the value of the pointer that will be returned: ");
+    putintln((int)(((char*)cptr + sizeof(Crate))));
+    putintln(sizeof(Crate));
 
     println("~~~~~~~~~~ENDOF MALLOC CALL~~~~~~~~~~~~~~");
 
@@ -235,16 +316,18 @@ void* malloc(unsigned int bytes) {
      */
     Crate* cptr = (Crate *) heapstart;
 
-    bytes = (bytes & rmlessthan8) < bytes ? bytes + 8 & rmlessthan8 : bytes & rmlessthan8;
-
+    bytes = (bytes & rmlessthan8) < bytes ? (bytes + 8) & rmlessthan8 : bytes & rmlessthan8;
+    
     while (cptr->used || cptr->size < bytes) {
-        if (cptr->next == 0) return 0;
+        if (cptr->next == 0) {
+            println("!!!!!!!!!!Malloc failed to find mem addr!!!!!!!");
+            return 0;
+        }
         cptr = cptr->next;
     }
 
     //found the next Crate
     if (cptr->size < (sizeof(Crate) << 1) + bytes) {
-        println("Using the buffer instead of splitting");
         //the buffer should not be split up as it cannot hold another Crate header
         cptr->used = 1;
         return cptr + sizeof(Crate);
@@ -254,8 +337,7 @@ void* malloc(unsigned int bytes) {
     int add = sizeof(Crate) + bytes;
     Crate* newcptr = (Crate *) ((char*)cptr + add);
 
-    asm volatile("crateVals:");
-    *newcptr = (Crate){0, 0, cptr->size - sizeof(Crate) - bytes};
+    *newcptr = (Crate){0, 0, cptr, cptr->size - sizeof(Crate) - bytes};
     cptr->used = 1;
     cptr->size = bytes;
     cptr->next = newcptr;
@@ -263,10 +345,49 @@ void* malloc(unsigned int bytes) {
     return (Crate*) ((char*)cptr + sizeof(Crate));
 }
 
+void heapPrint() {
+    /*
+     * This function serves to traverse and print out information on the current state of the heap
+     */
+    println("##########HEAP PRINT############");
+
+    Crate* cptr = (Crate*) heapstart;
+
+    while (cptr != 0) {
+        cratePrint(cptr);
+        cptr = cptr->next;
+    } 
+
+    println("########HEAP PRINT END########");
+}
+
+void heapClean() {
+    int* heap = (int*) heapstart;
+    for (int i = 0; i<(heapend - heapstart - 4) / 4; i++) *(heap + i) = 0;
+}
+
 int free(void* ptr) {
+    println("$$$$$$$$$$$$$$$Attempting to free$$$$$$$$$$$$$$$$");
+
     Crate* cptr = ptr - sizeof(Crate);
+
+    putintln((int)cptr);
+
     cptr->used = 0;
-    //could attempt some resizing stuff here as well. If I want to merge blocks behind I will need a ptr to the previous
+
+    Crate* left = cptr;
+    Crate* right = cptr;
+
+    if (cptr->next->used == 0) {
+        right = cptr->next;
+    }
+    if (cptr->prev->used == 0) {
+        left = cptr->prev;
+    }
+
+    if (left != right) mergeCrates(left, right);
+
+    println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
     return 0;
 }
 

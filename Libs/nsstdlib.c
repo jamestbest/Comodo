@@ -150,7 +150,7 @@ void puthex(unsigned int a) {
     return;
 }
 
-void puthexln(int a) {
+void puthexln(unsigned int a) {
     puthex(a);
     putchar('\n');
 }

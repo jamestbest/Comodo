@@ -1,7 +1,6 @@
 asm ("ldr r13, =$0x10000");
 
-#include "../nsstdlib.h"
-
+#include "nsstdlib.h"
 
 __attribute__((optimize("O0"))) int main(){
     heapCreate();

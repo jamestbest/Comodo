@@ -1,7 +1,7 @@
 # Comodo
 This is a repo with information/files for compiling C programs to an ELF format that the Komodo emulator can load and run
 
-# Comodo's gone dynamic! 🥳
+# [Comodo's gone dynamic! 🥳](./NSSTDLib.md#Dynamic-memory-allocation)
 
 ## C file
 There are some fairly major caveats to this compilation, the most important being that you CANNOT use anything from the standard library as it will not be loaded.  
@@ -21,7 +21,7 @@ When compiling use this command
 
 `-T link.lds` This will override the normal linker script. More info below
 
-When compiling with the [nsstdlib](nsstdlib.md) use this command
+When compiling with the [nsstdlib](NSSTDLib.md) use this command
 `arm-linux-gnueabi-gcc <Cfilename> <nsstdlib> -nostartfiles -nostdlib -nolibc -nodefaultlibs -o <outputFileName> -mcpu=arm7tdmi -T link.lds -Wno-builtin-declaration-mismatch`
 
 `<nsstdlib>` This is the file that contains the nsstdlib code.
@@ -38,7 +38,7 @@ If all has gone well the start of the program should be at addr. 0x0 and so you 
 
 ## NSSTDlib
 Included in the repo is the "not so standard library". 
-Information on interacting with these functions can be found in the [nsstdlib.md](nsstdlib.md).  
+Information on interacting with these functions can be found in the [nsstdlib.md](NSSTDLib.md).  
 To use the nsstdlib include the headerfile at the top of the C file and include the file in the compilation process, described [here](#Compiling)
 
 ## Using GCC optimisations

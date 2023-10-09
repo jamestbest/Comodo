@@ -1,3 +1,5 @@
+#pragma once
+
 char getchar();
 
 void putchar (char a);
@@ -6,12 +8,15 @@ void putint (int a);
 void putintln (int a);
 void print (char *str);
 void println (char *str);
+void puthex(unsigned int a);
+void puthexln(unsigned int a);
 
-void reset(int err);
+void resets(); //reset silently
+void reset(int err); //outputs exit code
 
-void getstring(char terminator, int maxSize, char* buff);
+char* getstring(char terminator, int maxSize);
 int streq(char *stra, char *strb);
-void strcat(char *stra, char *strb, char *strc);
+char* strcat(char *stra, char *strb);
 int str2int(char *str);
 int len(char *str);
 
@@ -20,7 +25,19 @@ int max(int a, int b);
 int pow(int base, int expo);
 int ror(int a, int rep);
 
+typedef struct Crate {
+    char used;
+    struct Crate* next;
+    struct Crate* prev;
+    int size;
+} Crate;
+
 void heapCreate();
+void heapClean();
 void* malloc(unsigned int bytes);
 void* malloc_debug(unsigned int bytes);
 int free(void* ptr);
+void heapPrint();
+
+#define heapstart   0x010000
+#define heapend     0x100000

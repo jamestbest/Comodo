@@ -1,0 +1,15 @@
+KMD
+00000000:             ; main
+00000000: E3A0000C    ;     mov r0, #12
+00000004:             ; 
+00000004: E59F1008    ;     ldr r1, =0x3b9ac9fc
+00000008:             ; 
+00000008: E5010000    ;     str r0, [r1]
+0000000C:             ; 
+0000000C: E5112000    ;     ldr r2, [r1]
+00000010:             ; 
+00000010: EF000002    ;     swi 2
+00000014: 3B9AC9FC    ; Remaining literals
+
+Symbol Table: Labels
+: main                              00000000  Local -- ARM

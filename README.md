@@ -68,8 +68,8 @@ Within RunWS.sh which is the file to run with the standard library
 `-Wno-builtin-declaration-mismatch` disables the warning about redefining the std lib functions
 
 ## Disclaimer
-	- This project is not intended be used to generate any arm assembly that is submitted for coursework, the difference between compiler generated and person generated assembly is easy enough to distingish anyway but just to say that's not why I started this project.
-	- This project includes a couple things that I leant about during me working on it; linkerscripts, ELF, startup files (crt0), bash files. It is also where the majority of my C coding practice has come from, so there is bound to be some terrible practices and code that makes no sense, but here is ya warning.
+This project is not intended be used to generate any arm assembly that is submitted for coursework, the difference between compiler generated and person generated assembly is easy enough to distingish anyway but just to say that's not why I started this project.  
+This project includes a couple things that I leant about during me working on it; linkerscripts, ELF, startup files (crt0), bash files. It is also where the majority of my C coding practice has come from, so there is bound to be some terrible practices and code that makes no sense, but here is ya warning.
 
 ## TODO
 I have not yet tried to have multiple C files that are then linked. I think this will work just fine, but it is not yet tested.    

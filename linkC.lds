@@ -11,7 +11,6 @@ SECTIONS
 	. = 0x0;
 	
 	.text (0x0) : { *(.text) }
-	__sstack = MAX_MEM_ADDR;
 	.data : { *(.data) }
 	.bss  : { *(.bss ) }	
 	.note.gnu.build-id : {}
@@ -24,6 +23,6 @@ SECTIONS
 	.heap :
 	{
 		HEAP_START = .;
-		HEAP_END = MAX_MEM_ADDR - HEAP_START;
+		HEAP_END = MAX_MEM_ADDR;
 	}
 }

@@ -1,5 +1,3 @@
-asm ("ldr r13, =$0x10000");
-
 #include "nsstdlib.h"
 
 int width = 18;
@@ -19,9 +17,7 @@ void loop(char active[height][width], char passive[height][width]);
 int countNeighbours(int row, int col, char active[height][width]);
 int isvalidindex(int row, int col);
 
-__attribute__((optimize("O0"))) int main(){
-    heapCreate();
-
+int main(){
     char activeGrid[MAXHEIGHT][MAXWIDTH];
     char passiveGrid[MAXHEIGHT][MAXWIDTH];
 
@@ -33,14 +29,13 @@ __attribute__((optimize("O0"))) int main(){
 
     loop(activeGrid, passiveGrid);
 
-    reset(0);
+    return 0;
 }
 
 void getdims() {
 getwidstart:
     println("Please enter a width for the grid");
-    char widthbuff[3];
-    getstring('\n', 3, widthbuff);
+    char* widthbuff = getstring('\n', 2);
     int wid = str2int(widthbuff);
 
     if (wid < 0 || wid > MAXWIDTH) {
@@ -50,8 +45,7 @@ getwidstart:
 
 getheightstart:
     println("Please enter a height for the grid");
-    char heightBuff[3];
-    getstring('\n', 3, heightBuff);
+    char* heightBuff = getstring('\n', 2);
     int hei = str2int(heightBuff);
 
     if (hei < 0 || hei > MAXHEIGHT) {

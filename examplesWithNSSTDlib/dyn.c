@@ -1,13 +1,6 @@
-asm ("ldr r13, =$0x10000");
+#include "nsstdlib.h"
 
-#include "../nsstdlib.h"
-
-
-__attribute__((optimize("O0"))) int main(){
-    putintln(0x010000);
-
-    heapCreate();
-
+int main(){
     int a = 12;
 
     char* str = malloc(16);
@@ -16,13 +9,14 @@ __attribute__((optimize("O0"))) int main(){
 
     str[7] = 'a';
 
-    char* buff = malloc(3);
-    getstring('\n', 3, buff);
+    
+    char* buff = getstring('\n', 3);
     print("This is the pointer to the buffer");
     putintln((int)buff);
     int width = str2int(buff);
     println(buff);
-    getstring('\n', 3, buff);
+    free(buff);
+    buff = getstring('\n', 3);
     println(buff);
     int height = str2int(buff);
 
@@ -58,8 +52,6 @@ __attribute__((optimize("O0"))) int main(){
     free(grid);
 
     heapPrint();
-
-    reset(0);
 
     return 0;
 }

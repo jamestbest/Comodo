@@ -1,11 +1,6 @@
-asm ("ldr r13, =$0x10000");
+#include "nsstdlib.h"
 
-#include "../nsstdlib.h"
-
-
-__attribute__((optimize("O0"))) int main() {
-    heapCreate();
-
+int main() {
     println("Hello and welcome to the main file for testing the nsstdlib!");
 
     println("If you plan on using the heap at all you will need to use heapCreate() at the start of your program. Some nsstdlib functions will use the heap.");
@@ -132,5 +127,5 @@ __attribute__((optimize("O0"))) int main() {
 
     println("That concludes this strange 'tutorial' that was actually incredibly useful at helpling me find and fix bugs.");
     println("Feel free to edit some of the errors/mistakes in this code");
-    reset(0);
+    return 13;
 }

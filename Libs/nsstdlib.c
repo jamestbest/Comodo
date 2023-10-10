@@ -229,7 +229,7 @@ char* getstring(char terminator, int maxSize) {
         inp = getchar();
         buff[index++] = inp;
     } while (inp != terminator && index < maxSize);
-    buff[index] = '\0';
+    buff[inp == terminator ? index - 1 : index] = '\0';
 
     return buff;
 }
@@ -284,15 +284,34 @@ static void mergeCrates_debug(Crate* c1, Crate* c2) {
     println("~~~~~~~~~~Crate merge end~~~~~~~~~~");
 }
 
-void heapCreate() {
-    /* 
+unsigned int heapstart;
+unsigned int heapend;
+void heapCreate_debug(unsigned int heap_start, unsigned int heap_end) {
+    /*
+ * usedflag ptr2next  ptr2prev  sizeofdata  data
+ * byte     4 bytes   4 bytes   4 bytes     ...
+ */
+    heapstart = heap_start;
+    heapend = heap_end;
+
+    println("Creating heap, start and end addr: ");
+    puthexln(heap_start);
+    puthexln(heap_end);
+    println("Total size in Kb");
+    putintln((heap_end - heap_start) / 1024);
+
+    *(Crate *)heap_start = (Crate){0,0,0, heap_end - heap_start - sizeof(Crate)};
+}
+
+
+void heapCreate(unsigned int heap_start, unsigned int heap_end) {
+    /*
      * usedflag ptr2next  ptr2prev  sizeofdata  data
      * byte     4 bytes   4 bytes   4 bytes     ...
      */
-
-    void* head = (void *) heapstart;
-
-    *(Crate *)head = (Crate){0,0,0, heapend - heapstart - sizeof(Crate)};
+    heapstart = heap_start;
+    heapend = heap_end;
+    *(Crate *)heap_start = (Crate){0,0,0, heap_end - heap_start - sizeof(Crate)};
 }
 
 void* malloc(unsigned int bytes) {
@@ -318,12 +337,14 @@ void* malloc(unsigned int bytes) {
 
         return (Crate*) ((char*)largeCratePtr + sizeof(Crate));
     }
-
+    
     //split the buffer into two new ones
     int add = sizeof(Crate) + bytes;
     Crate* newcptr = (Crate *) ((char*)largeCratePtr + add);
 
-    largeCratePtr->next->prev = newcptr;
+    if (largeCratePtr->next) {
+        largeCratePtr->next->prev = newcptr;
+    }
 
     *newcptr = (Crate){0, largeCratePtr->next, largeCratePtr, largeCratePtr->size - sizeof(Crate) - bytes};
 

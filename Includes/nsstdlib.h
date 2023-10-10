@@ -32,12 +32,11 @@ typedef struct Crate {
     int size;
 } Crate;
 
-void heapCreate();
+void heapCreate(unsigned int heap_start, unsigned int heap_end);
+void heapCreate_debug(unsigned int heap_start, unsigned int heap_end);
+
 void heapClean();
 void* malloc(unsigned int bytes);
 void* malloc_debug(unsigned int bytes);
 int free(void* ptr);
 void heapPrint();
-
-#define heapstart   0x010000
-#define heapend     0x100000

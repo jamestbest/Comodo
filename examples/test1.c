@@ -1,20 +1,16 @@
-asm ("ldr r13, =$0xFFFFF");
-
 struct test {
     int t1;
     int t2;
 } test;
 
-int main(int argc, char **argv) {
-    
-
+int main() {
     int a = 12; int b = 14;
 
     for (int i = 0; i < 10; i++) {
         a = a + b;
         b = b << 1;
     }
-    
+
     struct test astruct = {1,3};
 
     int c = astruct.t1 + astruct.t2;

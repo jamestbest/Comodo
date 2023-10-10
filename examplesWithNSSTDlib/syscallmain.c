@@ -1,6 +1,4 @@
-__asm__ ("ldr r13, =$0x10000");
-
-#include "../nsstdlib.h"
+#include "nsstdlib.h"
 
 int main() {
     int out = 1; int inp = 2;
@@ -20,13 +18,13 @@ int main() {
     char* a = "Hello";
     char* b = " World!";
     int newlen = len(a) + len(b) + 1;
-    char c[newlen];
-
     putintln(newlen);
 
-    strcat(a,b,c);
+    char* c = strcat(a,b);
 
     println(c);
+
+    println("enter a character");
 
     char chr = getchar();
 
@@ -35,15 +33,19 @@ int main() {
     print("Please enter your name: ");
 
     int size = 10;
-    char buff[size];
-    getstring('\n', size, buff);
+    char* buff = getstring('\n', size);
+
+	putintln(len(buff));
+	putintln(len("james"));
 
     print("Your name is: ");
     println(buff);
 
+    putintln(streq("james", "james"));
+
     println(streq(buff, "james") ? "You are admin" : "You are not admin");
 
-    reset(0);
+    return 0;
 }
 
 int a() {

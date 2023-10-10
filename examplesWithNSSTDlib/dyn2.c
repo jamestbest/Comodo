@@ -1,11 +1,6 @@
-asm ("ldr r13, =$0x10000");
+#include "nsstdlib.h"
 
-#include "../nsstdlib.h"
-
-
-__attribute__((optimize("O0"))) int main(){
-    heapCreate();
-
+int main(){
     heapPrint();
 
     char* str = getstring('\n', 3);
@@ -17,6 +12,5 @@ __attribute__((optimize("O0"))) int main(){
 
     heapPrint();
 
-    reset(0);
     return 0;
 }

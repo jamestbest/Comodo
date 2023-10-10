@@ -1,7 +1,5 @@
-asm ("ldr r13, =$0x10000");
-
-int main(int argc,  char **argv) {
-	int arr[] = {1,2,3,4,5};
+int main() {
+	int arr[] = {1,2,3,4,5,6};
 
 	int tot = 0;
 	int len = sizeof(arr) / sizeof(int);

@@ -28,14 +28,17 @@ Information on interacting with these functions can be found in the [nsstdlib.md
 To use the nsstdlib include the headerfile at the top of the C file and include the file in the compilation process, described [here](#Compiling)
 
 ## Linker script
-There are two linkerscripts provided, linkC.lds which is used when linking the NSSTDlib this also gives the startup information on the start of the heap. It formats the outputed elf so that 0x0 should be the start of _start.
+There are two linkerscripts provided, both are used to format the ELF to place the starting function (_start) at the 0x0 so that komodo can be run without moving the program counter. They both also provide an address for the start of the stack i.e. MAX_MEM_ADDR.
 
-The second linkerscript is linkS.lds. This is just used when there is no heap and so only the stack information is provided, along with the elf format.
+LinkC.lds is used when linking with the standard library and will also provide information on the format and position of the heap as well as having the nsstdlib as an input.  
+The only other difference between the files is that LinkC uses krt0 as the startup file whereas linkS uses krt1, details below.
 
 ## krt0, krt1
 Also included are two files that are used as the actual entry point of your program, they define a function _start that in both cases sets up the stack pointer and call main. krt0 is used when calling a file that includes the NSSTDlib and so also calls heapCreate to setup the heap with the given start and end memory addresses. It also calls reset after main which will print out the error code of main aswell as call swi 2 to end kmd. The instruction that follows is `mov r15, #0` which mean a program that has run successfully does not need to be reset, you can just use run again.
 
-The krt0/1 object files are what is used in linking, but the arm files are also included.
+krt1 is used when not linking the nsstdlib and will setup the stack, call main, and then exit komodo with swi 2.  
+
+The krt0/1 object files are what is used in linking, but the arm files are also included.  
 
 ## Using GCC optimisations
 GCC optimisations should work, the krt0/1 and NSSTDlib were excluded from optimisation as from testing it caused some issues with inline assembly, although more testing is to be completed.
@@ -47,7 +50,7 @@ Included are some examples that do not use the NSSTDlib along with some that do.
 Within the bash scripts you will find the setup flags for the cross compiler below are some explanations/information about why they are included  
 
 Within RunNS.sh which is the file to run without the standard library
-`arm-linux-gnueabi-gcc ${inputfiles[@]} -o $outputfile -nostartfiles -nostdlib -nolibc -nodefaultlibs -mcpu=arm7tdmi -T ${dir}/linkS.lds`
+`arm-linux-gnueabi-gcc ${inputfiles[@]} -o $outputfile -nostartfiles -nostdlib -nolibc -nodefaultlibs -mcpu=arm7tdmi -T ${dir}/linkS.lds -L${dir}/Libs`
  
 This passes the input files and the name for the output file  
 
@@ -55,7 +58,9 @@ This passes the input files and the name for the output file
 
 `-mcpu=arm7tdmi` This is one of the supported architectures listed [here](https://studentnet.cs.manchester.ac.uk/resources/software/komodo/) under target systems
 
-`-T ${dir}/linkS.lds` This will override the normal linker script. The new script is linkS, for 
+`-T ${dir}/linkS.lds` This will override the normal linker script. The new script is linkS, it describes the layout of the generated elf.
+
+`-L${dir}/Libs` This is adds the path to krt1.o, the startup file for files without the NSSTDlib.
 
 Within RunWS.sh which is the file to run with the standard library
 

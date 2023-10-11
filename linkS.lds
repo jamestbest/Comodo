@@ -1,4 +1,4 @@
-ENTRY(main)
+ENTRY(_start)
 STARTUP(krt1.o)
 
 MAX_MEM_ADDR = 0x100000;

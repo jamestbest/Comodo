@@ -11,9 +11,6 @@ void println (char *str);
 void puthex(unsigned int a);
 void puthexln(unsigned int a);
 
-void resets(); //reset silently
-void reset(int err); //outputs exit code
-
 char* getstring(char terminator, int maxSize);
 int streq(char *stra, char *strb);
 char* strcat(char *stra, char *strb);
@@ -33,9 +30,6 @@ typedef struct Crate {
     struct Crate* prev;
     int size;
 } Crate;
-
-void heapCreate(unsigned int heap_start, unsigned int heap_end);
-void heapCreate_debug(unsigned int heap_start, unsigned int heap_end);
 
 void heapClean();
 void* malloc(unsigned int bytes);

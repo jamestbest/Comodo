@@ -20,6 +20,8 @@ char* strcat(char *stra, char *strb);
 int str2int(char *str);
 int len(char *str);
 
+void memcpy(void* src, void* dst, unsigned int bytes);
+
 int min(int a, int b);
 int max(int a, int b);
 int pow(int base, int expo);

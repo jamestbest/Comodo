@@ -175,19 +175,43 @@ int max(int a, int b) {
     return a > b ? a : b;
 }
 
-#define rmlessthan8 0xFFF8
-void memcpy(void* src, void* dest, unsigned int bytes) {
-    unsigned int mfour = bytes & rmlessthan8;
-    unsigned int extra = bytes & 0x7;
+void memcpy_bytes(void* src, void* dst, unsigned int bytes) {
+    for (int i = 0; i < bytes; i++) {
+        *((char*)dst + i) = *((char*)src + i);
+    }
+}
 
-    for (int i = 0; i < mfour / 4; i++) {
-        int srcword = *(((int*)src) + i);
-        *((int*)dest+i) = srcword;
+#define rmlessthan8 0xFFF8
+#define rmlessthan4 0xFFFC
+void memcpy(void* src, void* dst, unsigned int bytes) { //writes must be aligned
+    unsigned int align = 0;
+
+    int src_misalign = (long int) src & 0x3;
+    int dst_misalign = (long int) dst & 0x3;
+
+    if (src_misalign != dst_misalign) {
+        //if the src and destination addresses are misaligned by different amounts then we cannot write any words to them
+        memcpy_bytes(src, dst, bytes);
+        return;
     }
 
-    for (int i = 0; i < extra; i++) {
-        char srcchar = *(((char*)src) + i);
-        *((char*)dest + i) = srcchar;
+    for (int i = 0; i < src_misalign; i++) {
+        //align the addresses by just writing bytes
+        *((char*)dst + i) = *((char*)src + i);
+    }
+
+    bytes -= align;
+    unsigned int mfour = bytes & rmlessthan4; //find the number of words that we can write to the dst
+    unsigned int extra = bytes & 0x3; //the number of bytes to write after
+    src += align;
+    dst += align;
+
+    for (int i = 0; i < mfour / 4; i++) {
+        *((int*)dst + i) = *((int*)src + i);
+    }
+
+    for (int i = mfour; i < extra + mfour; i++) {
+        *((char*)dst + i) = *((char*)src + i);
     }
 }
 

@@ -58,9 +58,9 @@ Calls to malloc will have their requested bytes set to the closest multiple of 8
 ## Do not call
 Below is a list of functions that the NSSTDlib uses internally, these should not be used
 
-| Subroutine                              | Description                                                                                                                   | SWIs |
-|-----------------------------------------|-------------------------------------------------------------------------------------------------------------------------------|------|
-| void heapCreate()                       | Sets up the heap header Crate with its size                                                                                   | 3, 4 |
-| void reset(int err) 			  | Resets the PC and halts KMD. Also prints out the error code   								  | 2, 3 |
-| void resets()       			  | Resets the PC and halts KMD silently, does not output err code 								  | 2    |
+| Subroutine                                                      | Description                                                    | SWIs |
+|-----------------------------------------------------------------|----------------------------------------------------------------|------|
+| void heapCreate(unsigned int heap_start, unsigned int heap_end) | Sets up the heap header Crate with its size                    |      |
+| void reset(int err)                                             | Resets the PC and halts KMD. Also prints out the error code    | 2, 3 |
+| void resets()                                                   | Resets the PC and halts KMD silently, does not output err code | 2    |
 

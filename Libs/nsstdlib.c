@@ -4,6 +4,11 @@
 
 #include "nsstdlib.h"
 
+void heapCreate(unsigned int heap_start, unsigned int heap_end);
+void heapCreate_debug(unsigned int heap_start, unsigned int heap_end);
+void resets();
+void reset(int errcode);
+
 int ror(int a, int rep) {
     int out;
     asm (
@@ -475,6 +480,8 @@ void heapPrint() {
 void heapClean() {
     int* heap = (int*) heapstart;
     for (int i = 0; i<(heapend - heapstart - 4) / 4; i++) *(heap + i) = 0;
+
+    heapCreate(heapstart, heapend);
 }
 
 int free(void* ptr) {

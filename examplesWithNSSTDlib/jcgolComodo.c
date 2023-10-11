@@ -2,6 +2,8 @@
 
 int width = 18;
 int height = 18;
+int erase_b = 0;
+int slow_b = 0;
 
 #define MAXWIDTH 30
 #define MAXHEIGHT 30
@@ -16,12 +18,17 @@ void updategrid(char active[height][width], char passive[height][width]);
 void loop(char active[height][width], char passive[height][width]);
 int countNeighbours(int row, int col, char active[height][width]);
 int isvalidindex(int row, int col);
+void ask_erase();
+void ask_slow();
 
 int main(){
     char activeGrid[MAXHEIGHT][MAXWIDTH];
     char passiveGrid[MAXHEIGHT][MAXWIDTH];
 
     getdims();
+
+    ask_erase();
+    ask_slow();
 
     gengrid(activeGrid);
 
@@ -31,6 +38,27 @@ int main(){
 
     return 0;
 }
+
+void ask_erase() {
+    println("Would you like to enable frame erase? Y/n");
+    char ans = getchar();
+
+    if (ans == 'Y') erase_b = 1;
+    else erase_b = 0;
+
+    println(erase_b ? "erase is on" : "erase is off");
+}
+
+void ask_slow() {
+    println("Would you like to enable slow mode? Y/n");
+    char ans = getchar();
+
+    if (ans == 'Y') slow_b = 1;
+    else slow_b = 0;
+
+    println(slow_b ? "Slow mode is on" : "Slow mode is off");
+}
+
 
 void getdims() {
 getwidstart:
@@ -128,6 +156,20 @@ void genrandom(char grid[height][width]) {
     }
 }
 
+void eraseprint(void) {
+    for (int i = 0; i < (width << 1) + 1; i++) {
+        putchar('\b');
+    }
+
+    for (int row = 0; row < height; row++) {
+        for (int col = 0; col < width; col++) {
+            putchar('\b');
+            putchar('\b');
+        }
+        putchar('\b');
+    }
+}
+
 void printgrid(char grid[height][width]) {
     for (int row = 0; row < height; row++) {
         for (int col = 0; col < width; col++) {
@@ -148,12 +190,20 @@ void printgrid(char grid[height][width]) {
     putchar('\n');
 }
 
+void wait() {
+    for (int i = 0; i < 300; i++) {
+        print("a\b");
+    }
+}
+
 void loop(char active[height][width], char passive[height][width]) {
     int gridSelect = 1;
     while (1) {
-        putintln(gridSelect);
-        putintln(!gridSelect);
         updategrid(gridSelect ? active : passive, !gridSelect ? active : passive);
+
+        if (slow_b) wait();
+
+        if (erase_b) eraseprint();
 
         printgrid(gridSelect ? active : passive);
 

@@ -44,7 +44,7 @@ All the following functions have a \<funcName\>ln() variant that will print a ne
 ## Dynamic memory allocation
 In order to support dynamic memory allocation the NSSTDlib will create a heap from the end of your program to 0x100000, this provides ~1MB of heap space.
 
-Calls to malloc will have their requested bytes set to the closest multiple of 8. Each piece of memory added to the heap uses a Crate struct to hold information on the section, i.e. if its being used, its size, and a pointer to the next crate, as well as one to the previous. This means there is 4 bytes of header before each malloc point and so the effective amount of dynamic memory will depend on how small your calls to malloc are.
+Calls to malloc will have their requested bytes set to the closest multiple of 8. Each piece of memory added to the heap uses a Crate struct to hold information on the section, i.e. if its being used, its size, and a pointer to the next crate, as well as one to the previous. This means there is 3 Words + 1 byte of header before each malloc point and so the effective amount of dynamic memory will depend on how small your calls to malloc are.
 
 | Subroutine                              | Description                                                                                                                   | SWIs |
 |-----------------------------------------|-------------------------------------------------------------------------------------------------------------------------------|------|

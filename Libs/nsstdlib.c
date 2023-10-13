@@ -211,7 +211,7 @@ void memcpy(void* src, void* dst, unsigned int bytes) { //writes must be aligned
     src += align;
     dst += align;
 
-    for (int i = 0; i < mfour / 4; i++) {
+    for (int i = 0; i < (mfour >> 2); i++) {
         *((int*)dst + i) = *((int*)src + i);
     }
 

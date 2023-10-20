@@ -20,6 +20,16 @@ All the following functions have a \<funcName\>ln() variant that will print a ne
 | void putchar(char a)        | Output a to the features tab                       | 0    |
 | void print(char* str)       | Print a null terminated string to the features tab | 3    |
 | void puthex(unsigned int a) | Outputs the hex version of a                       | 3    |
+| void printf(char* format, ...) | Very similar to printf in C with limited functionality more info below | 3,0  |
+
+### Printf
+Printf currently supports 4 different argument formats
+| Format   | Description                                        | SWIs |
+|----------|----------------------------------------------------|------|
+| %d, %i   | Output an integer argument                         | 4    |
+| %c       | Output a character argument                        | 0    |
+| %h       | Output an integer argument as hex                  | 3    |
+| %s       | Output a string argument (char*)                   | 3    |
 
 ### String functions
 
@@ -60,7 +70,9 @@ Below is a list of functions that the NSSTDlib uses internally, these should not
 
 | Subroutine                                                      | Description                                                    | SWIs |
 |-----------------------------------------------------------------|----------------------------------------------------------------|------|
-| void heapCreate(unsigned int heap_start, unsigned int heap_end) | Sets up the heap header Crate with its size                    |      |
+| void heapCreate(unsigned int heap_start, unsigned int heap_end) | Sets up the heap header Crate with its size                    | -    |
 | void reset(int err)                                             | Resets the PC and halts KMD. Also prints out the error code    | 2, 3 |
 | void resets()                                                   | Resets the PC and halts KMD silently, does not output err code | 2    |
+| void _printf(char* format, va_list vl)                          | Takes in a variable arg list used by printf and printfln       | -    |
+
 

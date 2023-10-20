@@ -3,11 +3,83 @@
 #pragma GCC diagnostic ignored "-Wunused-function"
 
 #include "nsstdlib.h"
+#include <stdarg.h>
 
 void heapCreate(unsigned int heap_start, unsigned int heap_end);
 void heapCreate_debug(unsigned int heap_start, unsigned int heap_end);
 void resets();
 void reset(int errcode);
+
+int printarg(char* format, int position, va_list* vl) {
+    //currently support char, int, hex, string
+    //c/i/h/s
+
+    //position points to %
+    
+    char choice = format[position + 1];
+
+    switch (choice) {
+        case 'i':
+        case 'd':
+            putint(va_arg(*vl, int));
+            break;
+        case 'c':
+            putchar(va_arg(*vl, int));
+            break;
+        case 'h':
+            puthex(va_arg(*vl, int));
+            break;
+        case 's':
+            print(va_arg(*vl, char*));
+            break;
+        default:
+            break;
+    }
+
+    return position + 1;
+}
+
+void _printf(char* format, va_list vl) {
+    int cstring_start = 0;
+
+    int f_l = len(format);
+
+    for (int i = 0; i < f_l; i++) {
+        char c = format[i];
+
+        if (c == '%') {
+            if (i + 1 > f_l) {
+                break;
+            }
+
+            format[i] = '\0';
+            print(&format[cstring_start]);
+
+            i = printarg(format, i, &vl);
+            cstring_start = i + 1; //removing the symbol after % e.g. d 
+        }
+    }
+
+    print(&format[cstring_start]);
+}
+
+void printf(char* format, ...) {
+    va_list vl;
+
+    va_start(vl, format);
+    _printf(format, vl);
+    va_end(vl);
+}
+
+void printfln(char* format, ...) {
+    va_list vl;
+
+    va_start(vl, format);
+    _printf(format, vl);
+    va_end(vl);
+
+    putchar('\n');
+}
 
 int ror(int a, int rep) {
     int out;
@@ -186,8 +258,8 @@ void memcpy_bytes(void* src, void* dst, unsigned int bytes) {
     }
 }
 
-#define rmlessthan8 0xFFF8
-#define rmlessthan4 0xFFFC
+#define rmlessthan8 -8
+#define rmlessthan4 -4
 void memcpy(void* src, void* dst, unsigned int bytes) { //writes must be aligned
     unsigned int align = 0;
 

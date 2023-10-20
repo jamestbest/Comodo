@@ -2,6 +2,9 @@
 
 char getchar();
 
+void printf(char* format, ...);
+void printfln(char* format, ...);
+
 void putchar (char a);
 void putcharln (char a);
 void putint (int a);

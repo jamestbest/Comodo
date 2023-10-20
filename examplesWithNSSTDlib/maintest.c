@@ -3,8 +3,6 @@
 int main() {
     println("Hello and welcome to the main file for testing the nsstdlib!");
 
-    println("If you plan on using the heap at all you will need to use heapCreate() at the start of your program. Some nsstdlib functions will use the heap.");
-
     println("First step is to print something to the screen, and it seems we've at least got that working, so next will be just a single character");
     putcharln('h');
 
@@ -22,6 +20,9 @@ int main() {
     char* inp3 = getstring('\n', -1);
 
     println(inp3);
+
+    println("Along with the nsstdlib is stdarg.h this allows for variable argument functions such as printf below is a test for varargs");
+    printfln("These are the value 1:%d 2:%d 3:%d 4:%d",10,9,8,7);
 
     println("Now some string functions first is streq for the following strings");
 
@@ -69,7 +70,7 @@ int main() {
     println("When ending your program use reset() this will allow you to then press run again without reset. If your program does not reach reset() or you have loaded a new version into kmd then use the reset button manually");
 
     println("There is also dynamic memory allocation, it is used in some of the nsstdlib functions such as strcat but you can call it yourself with malloc()");
-    println("Input two numbers with a delimiter of ENTER key. They should be 1-2 digit numbers");
+    println("Input two numbers with a delimiter of ENTER key. They should be 1-3 digit numbers");
 
     int wid = str2int(getstring('\n', 3));
     putintln(wid);

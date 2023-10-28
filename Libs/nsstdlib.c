@@ -32,6 +32,9 @@ int printarg(char* format, int position, va_list* vl) {
         case 's':
             print(va_arg(*vl, char*));
             break;
+        case '%':
+            putchar('%');
+            break;
         default:
             break;
     }

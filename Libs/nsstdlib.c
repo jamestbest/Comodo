@@ -108,9 +108,11 @@ int str2int(char *str){
     int length = len(str);
 
     int out = 0;
-    for (int i = length - 1; i >= 0; i--) {
-        int digit = str[i] - 48;
-        out += digit * pow(10, length - i - 1);
+    for (int i = 0; i < length; i++) {
+        int digit = str[i] - 48; //validiting checking? What's that?
+        
+        out *= 10;
+        out += digit;
     }
 
     return out;
@@ -118,8 +120,8 @@ int str2int(char *str){
 
 int len(char *str){
     int i = 0;
-    while (str[i++] != '\0');
-    return i - 1;
+    while (str[i] != '\0') {i++};
+    return i;
 }
 
 char* strcat(char *stra, char *strb) {

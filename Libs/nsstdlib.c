@@ -210,9 +210,9 @@ void puthex(unsigned int a) {
      * should be unsigned
      */
 
-    char buff[9];
+    char buff[maxhexbuff];
 
-    if (a <= 0) {putint(a); return;}
+    if (a <= 9) {putint(a); return;}
 
     int count = 0;
     int tempa = a;
@@ -341,14 +341,16 @@ char* getstring(char terminator, int maxSize) {
 }
 
 int streq(char *stra, char *strb) {
-    int lena = len(stra);
-    int lenb = len(strb);
+    // int lena = len(stra);        IF ONLY
+    // int lenb = len(strb);
 
-    if (lena != lenb) {
-        return 0;
-    }
+    // if (lena != lenb) {
+    //     return 0;
+    // }
 
     for (int i = 0; i < lena; i++) {
+        if (stra[i] == '\0') {return strb[i] == '\0'};
+        if (strb[i] == '\0') {return stra[i] == '\0'};
         if (stra[i] != strb[i]) {
             return 0;
         }
